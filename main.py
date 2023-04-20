@@ -13,7 +13,7 @@ import config
 
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 11.0; SM-M30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
-PATH_OF_DRIVER = "C:\\Users\\aslam\\chromedriver_win32\\chromedriver.exe"
+# PATH_OF_DRIVER = "C:\\Users\\aslam\\chromedriver_win32\\chromedriver.exe"
 # PROXY_HOST = '165.227.81.188'
 # PROXY_PORT = 9987
 
@@ -33,8 +33,8 @@ def get_driver(mode):
     
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
-
+    driver = webdriver.Chrome(options=options)
+# executable_path=PATH_OF_DRIVER, 
     return driver
 
 def login(driver, email, password):
