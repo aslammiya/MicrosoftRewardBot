@@ -98,7 +98,6 @@ def pc_search(numOfSearch,email,password):
     time.sleep(10)
     print(totalPoints(driver_pc).text)
     search(driver_pc,numOfSearch)
-    print(totalPoints(driver_pc).text)
     logout(driver_pc)
     driver_pc.quit()
 
