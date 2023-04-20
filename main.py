@@ -12,7 +12,7 @@ import string
 
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 11.0; SM-M30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
-
+PATH_OF_DRIVER = "C:\\Users\\aslam\\chromedriver_win32\\chromedriver.exe"
 # PROXY_HOST = '165.227.81.188'
 # PROXY_PORT = 9987
 
@@ -30,9 +30,9 @@ def get_driver(mode):
     else:
         raise ValueError('Invalid mode')
     
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(executable_path="C:\\Users\\aslam\\chromedriver_win32\\chromedriver.exe", options=options)
+    driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
 
     return driver
 
@@ -155,26 +155,17 @@ def click_all_cards(driver):
     time.sleep(3)
     
     while True:
-        # find all card elements
         card_list = driver.find_elements(By.XPATH,"//div[@id='bingRewards']/div[1]/div[5]//div[contains(@class, 'card')]")
-        
-        # if no cards are found, all cards have been clicked
         if len(card_list) == 0:
             break
-        
-        # click on each card and wait for rewards button to become clickable
         for card in card_list:
             card.click()
             time.sleep(2)
             rewards_button = wait.until(EC.element_to_be_clickable((By.ID, "id_rh")))
             rewards_button.click()
             time.sleep(3)
-        
-        # navigate back to rewards.bing.com to refresh the card list
         driver.get('https://rewards.bing.com/')
         time.sleep(3)
-        
-    # close the webdriver
     driver.quit()
 
 
@@ -183,8 +174,8 @@ def click_all_cards(driver):
 # password = "123@Sohel"
 
 pc_numOfSearch = 36
-mobile_numOfSearch = 21
-last4Digit = 4024
+mobile_numOfSearch = 22
+last4Digit = 4116
 
 # driver = get_driver('pc')
 # login(driver, email, password)
@@ -192,11 +183,11 @@ last4Digit = 4024
 
 # pc_search(pc_numOfSearch,email,password)
 # mobile_search(mobile_numOfSearch,email,password)
-# emails = ["aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya786@outlook.com"]
-# passwords = ["123@Aslam", "123@Aslam", "123@Aslam"]
+# emails = ["aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya786@outlook.com","aslammiya5257@gmail.com","aslammiya6362@gmail.com"]
+# passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam"]
 
-emails = ["sohelmiya0007@gmail.com"]
-passwords = ["123@sohel"]
+emails = ["aslammiya5257@gmail.com"]
+passwords = ["123@Aslam"]
 
 
 for i in range(len(emails)):
@@ -217,3 +208,9 @@ for i in range(len(emails)):
 # threeacc3386@outlook.com
 # fouracc3386@outlook.com
 # sohelmiya0007@gmail.com
+
+
+## help us to protecct your account
+# iProofLbl0 radio button
+# iProofEmail proof  email email enter field
+# iSelectProofAction Send code button
