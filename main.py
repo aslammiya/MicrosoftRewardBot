@@ -9,6 +9,7 @@ from essential_generators import DocumentGenerator
 import time
 import random
 import string
+import config
 
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 11.0; SM-M30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
@@ -173,9 +174,9 @@ def click_all_cards(driver):
 # email = "sohelmiya0007@outlook.com"
 # password = "123@Sohel"
 
-pc_numOfSearch = 36
-mobile_numOfSearch = 22
-last4Digit = 4116
+pc_numOfSearch = config.pc_numOfSearch
+mobile_numOfSearch = config.mobile_numOfSearch
+last4Digit = config.last4Digit
 
 # driver = get_driver('pc')
 # login(driver, email, password)
@@ -183,12 +184,9 @@ last4Digit = 4116
 
 # pc_search(pc_numOfSearch,email,password)
 # mobile_search(mobile_numOfSearch,email,password)
-# emails = ["aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya786@outlook.com","aslammiya5257@gmail.com","aslammiya6362@gmail.com"]
-# passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam"]
 
-emails = ["aslammiya5257@gmail.com"]
-passwords = ["123@Aslam"]
-
+emails = config.emails
+passwords = config.passwords
 
 for i in range(len(emails)):
     email = emails[i]
