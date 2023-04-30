@@ -30,11 +30,12 @@ def get_driver(mode):
         options.add_experimental_option("mobileEmulation", mobile_emulation)
     else:
         raise ValueError('Invalid mode')
+    options.add_argument('--blink-settings=imagesEnabled=false')
+    options.add_argument('--disable-images')
     options.add_argument('--no-sandbox')
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(options=options)
-# executable_path=PATH_OF_DRIVER, 
+    driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
     return driver
 
 def login(driver, email, password):
@@ -71,7 +72,7 @@ def login(driver, email, password):
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'iNext'))).click()
 
     driver.get(f'https://www.bing.com/search?q={generate_sentence()}')
-    print("\n\nLOGIN DONE\n\n")
+    print(f"\n\nLOGED IN TO {email}\n\n")
 
 def generate_sentence():
     sentence_length = random.randint(3, 10)
@@ -83,36 +84,37 @@ def totalPoints(driver):
     time.sleep(3)
     return WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//span[@id="id_rc"]')))
 
-def search(driver,numOfSearch):
+def search(driver,numOfSearch,email):
     for i in range(numOfSearch):
-        print(f"Search : {i}")
+        print(f"\n{email} Search : {i}\n")
         driver.get(f'https://www.bing.com/search?q={generate_sentence()}')
 
-def logout(driver):
+def logout(driver,email):
     driver.get("https://login.live.com/logout.srf")
+    print(f"\nLOED OUT FROM {email}")
 
 def pc_search(numOfSearch,email,password):
     driver_pc = get_driver('pc')
     login(driver_pc, email, password)
     driver_pc.refresh()
-    time.sleep(10)
+    time.sleep(15)
     print(totalPoints(driver_pc).text)
-    search(driver_pc,numOfSearch)
-    logout(driver_pc)
+    search(driver_pc,numOfSearch,email)
+    logout(driver_pc,email)
     driver_pc.quit()
 
 
 def mobile_search(numOfSearch,email,password):
     driver_mobile = get_driver('mobile')
     login(driver_mobile, email, password)
-    time.sleep(10)
+    time.sleep(15)
     driver_mobile.refresh()
     time.sleep(1)
     driver_mobile.execute_script("window.scrollTo(0, 0);")
     WebDriverWait(driver_mobile, 10).until(EC.element_to_be_clickable((By.ID, "mHamburger"))).click()
     time.sleep(5)
-    search(driver_mobile,numOfSearch)
-    logout(driver_mobile)
+    search(driver_mobile,numOfSearch,email)
+    logout(driver_mobile,email)
     driver_mobile.quit()
 
 def punchCards(driver):
@@ -211,3 +213,8 @@ for i in range(len(emails)):
 # iProofLbl0 radio button
 # iProofEmail proof  email email enter field
 # iSelectProofAction Send code button
+
+
+######## PRIVICY PAGE ###########
+# BUTTON ID = id="id__0"
+# TITLE = <span role="heading" aria-level="1" class="css-105">Your Microsoft account brings everything together&nbsp;</span>
