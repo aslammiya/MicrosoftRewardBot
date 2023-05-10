@@ -167,13 +167,16 @@ passwords = config.passwords
 pcBool = config.pc_search
 mobileBool = config.mobile_search
 startNumber = config.startNumber
-endtNumber = config.endNumber
+endNumber = config.endNumber
+expect = config.expect
 if pc_numOfSearch <= 0:
     pcBool = False
 if mobile_numOfSearch <= 0:
     mobileBool = False
 
-for i in range(startNumber,len(emails)-endtNumber):
+for i in range(startNumber, len(emails) - endNumber):
+    if i in expect:
+        continue
     email = emails[i]
     password = passwords[i]
     do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)

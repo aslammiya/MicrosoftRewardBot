@@ -1,11 +1,11 @@
 # emails = ["sohelmiya108@gmail.com","sohelmiya5559@gmail.com", "sohelmiya0007@gmail.com","sahilmiya0842@outlook.com","sohelmiya1223@gmail.com","sohelmiya768@gmail.com"]
 # passwords = ["123@sohel","123@sohel", "123@sohel","sahil@miya", "123@sohel", "123@sohel"]
 
-emails = ["aslammiya786@outlook.com", "aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya5257@gmail.com","aslammiya6362@gmail.com","oneacc1189@outlook.com"]
-passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam"]
+# emails = ["aslammiya786@outlook.com", "aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya5257@gmail.com","aslammiya6362@gmail.com","oneacc1189@outlook.com"]
+# passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam"]
 
-# emails = ["twoacc2287@outlook.com", "threeacc3386@outlook.com", "fouracc3386@outlook.com"]
-# passwords = ["123@fake", "123@fake", "123@fake"]
+emails = ["twoacc2287@outlook.com", "threeacc3386@outlook.com", "fouracc3386@outlook.com"]
+passwords = ["123@fake", "123@fake", "123@fake"]
 
 # emails = ["aslammiya786@outlook.com", "aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya5257@gmail.com","aslammiya6362@gmail.com","oneacc1189@outlook.com","sohelmiya108@gmail.com","sohelmiya5559@gmail.com", "sohelmiya0007@gmail.com","sahilmiya0842@outlook.com","sohelmiya1223@gmail.com"]
 # passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam","123@sohel","123@sohel", "123@sohel","sahil@miya","123@sohel"]
@@ -20,6 +20,7 @@ pc_numOfSearch = 36
 mobile_numOfSearch = 22
 startNumber = 0
 endNumber = 0
+expect = []
 
 # pcBool = True
 # mobileBool = True
