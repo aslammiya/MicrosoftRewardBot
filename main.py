@@ -17,19 +17,11 @@ PATH_OF_DRIVER = "C:\\Users\\aslam\\chromedriver_win32\\chromedriver.exe"
 # PROXY_HOST = '165.227.81.188'
 # PROXY_PORT = 9987
 
-def get_driver(mode):
+def get_driver():
     options = Options()
-    if mode == 'pc':
-        options.add_argument(f'user-agent={PC_USER_AGENT}')
-        options.add_argument("--start-maximized")
-    elif mode == 'mobile':
-        mobile_emulation = {
-            "deviceMetrics": { "width": 360, "height": 640, "pixelRatio": 3.0 },
-            "userAgent": MOBILE_USER_AGENT
-        }
-        options.add_experimental_option("mobileEmulation", mobile_emulation)
-    else:
-        raise ValueError('Invalid mode')
+    options.add_argument(f'user-agent={PC_USER_AGENT}')
+    options.add_argument('log-level=3')
+    options.add_argument("--start-maximized")
     options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument('--disable-images')
     options.add_argument('--no-sandbox')
@@ -50,13 +42,16 @@ def login(driver, email, password):
     driver.get('https://login.live.com')
     # driver.get('https://whatismyipaddress.com/')
     # time.sleep(20000)
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(EMAILFIELD)).send_keys(email)
+    print(f">> Email {email}")
+    WebDriverWait(driver, 15).until(EC.element_to_be_clickable(EMAILFIELD)).send_keys(email)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(PASSWORDFIELD)).send_keys(password)
+    print(f">> Password {password}")
+    WebDriverWait(driver, 15).until(EC.element_to_be_clickable(PASSWORDFIELD)).send_keys(password)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
     # time.sleep(20)
     try:
-        WebDriverWait(driver, 10).until(EC.element_to_be_clickable(NOBUTTON)).click()
+        print("▣ Clicking button")
+        WebDriverWait(driver, 15).until(EC.element_to_be_clickable(NOBUTTON)).click()
     except Exception:
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable(num_input_field)).send_keys(last4Digit)
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable(num_submit)).click()
@@ -72,7 +67,7 @@ def login(driver, email, password):
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'iNext'))).click()
 
     driver.get(f'https://www.bing.com/search?q={generate_sentence()}')
-    print(f"\n\nLOGED IN TO {email}\n\n")
+    print(f"\nLog In To {email}")
 
 def generate_sentence():
     sentence_length = random.randint(3, 10)
@@ -84,38 +79,32 @@ def totalPoints(driver):
     time.sleep(3)
     return WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//span[@id="id_rc"]')))
 
-def search(driver,numOfSearch,email):
+def search(driver,numOfSearch,email,mode):
     for i in range(numOfSearch):
-        print(f"\n{email} Search : {i}\n")
+        print(f"\r{email} {mode} Search : {i+1}/{numOfSearch}", end="")
         driver.get(f'https://www.bing.com/search?q={generate_sentence()}')
 
 def logout(driver,email):
     driver.get("https://login.live.com/logout.srf")
-    print(f"\nLOED OUT FROM {email}")
+    print(f"Log Out From {email}")
 
-def pc_search(numOfSearch,email,password):
-    driver_pc = get_driver('pc')
+def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile):
+    driver_pc = get_driver()
     login(driver_pc, email, password)
     driver_pc.refresh()
-    time.sleep(15)
-    print(totalPoints(driver_pc).text)
-    search(driver_pc,numOfSearch,email)
+    time.sleep(10)
+    if pc==True:
+        print(totalPoints(driver_pc).text)
+        search(driver_pc,numOfSearch,email,"PC")
+        print("")
+    if mobile==True:
+        command = "Network.setUserAgentOverride"
+        cmd_args = {"userAgent": MOBILE_USER_AGENT}
+        driver_pc.execute_cdp_cmd(command, cmd_args)
+        search(driver_pc,numOfMobileSearch,email,"Mobile")
+        print("")
     logout(driver_pc,email)
     driver_pc.quit()
-
-
-def mobile_search(numOfSearch,email,password):
-    driver_mobile = get_driver('mobile')
-    login(driver_mobile, email, password)
-    time.sleep(15)
-    driver_mobile.refresh()
-    time.sleep(1)
-    driver_mobile.execute_script("window.scrollTo(0, 0);")
-    WebDriverWait(driver_mobile, 10).until(EC.element_to_be_clickable((By.ID, "mHamburger"))).click()
-    time.sleep(5)
-    search(driver_mobile,numOfSearch,email)
-    logout(driver_mobile,email)
-    driver_mobile.quit()
 
 def punchCards(driver):
     print("Rewards start")
@@ -170,30 +159,24 @@ def click_all_cards(driver):
         time.sleep(3)
     driver.quit()
 
-
-
-# email = "sohelmiya0007@outlook.com"
-# password = "123@Sohel"
-
 pc_numOfSearch = config.pc_numOfSearch
 mobile_numOfSearch = config.mobile_numOfSearch
 last4Digit = config.last4Digit
-
-# driver = get_driver('pc')
-# login(driver, email, password)
-# click_all_cards(driver)
-
-# pc_search(pc_numOfSearch,email,password)
-# mobile_search(mobile_numOfSearch,email,password)
-
 emails = config.emails
 passwords = config.passwords
+pcBool = config.pc_search
+mobileBool = config.mobile_search
+startNumber = config.startNumber
+endtNumber = config.endNumber
+if pc_numOfSearch <= 0:
+    pcBool = False
+if mobile_numOfSearch <= 0:
+    mobileBool = False
 
-for i in range(len(emails)):
+for i in range(startNumber,len(emails)-endtNumber):
     email = emails[i]
     password = passwords[i]
-    pc_search(pc_numOfSearch, email, password)
-    mobile_search(mobile_numOfSearch, email, password)
+    do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
 
 # for email in lst_email:
 
