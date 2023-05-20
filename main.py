@@ -10,6 +10,7 @@ import time
 import random
 import string
 import config
+import os
 
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 11.0; SM-M30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
@@ -48,7 +49,7 @@ def login(driver, email, password):
     print(f">> Password {password}")
     WebDriverWait(driver, 15).until(EC.element_to_be_clickable(PASSWORDFIELD)).send_keys(password)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
-    # time.sleep(20)
+    # time.sleep(10)
     try:
         print("▣ Clicking button")
         WebDriverWait(driver, 15).until(EC.element_to_be_clickable(NOBUTTON)).click()
@@ -94,7 +95,7 @@ def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile):
     driver_pc.refresh()
     time.sleep(10)
     if pc==True:
-        print(totalPoints(driver_pc).text)
+        # print(totalPoints(driver_pc).text)
         search(driver_pc,numOfSearch,email,"PC")
         print("")
     if mobile==True:
@@ -159,6 +160,13 @@ def click_all_cards(driver):
         time.sleep(3)
     driver.quit()
 
+def is_list_empty(lst):
+    if not lst:
+        return True
+    else:
+        return False
+
+
 pc_numOfSearch = config.pc_numOfSearch
 mobile_numOfSearch = config.mobile_numOfSearch
 last4Digit = config.last4Digit
@@ -173,15 +181,38 @@ if pc_numOfSearch <= 0:
     pcBool = False
 if mobile_numOfSearch <= 0:
     mobileBool = False
+errAcc = []
 
 for i in range(startNumber, len(emails) - endNumber):
-    if i in expect:
+    try:
+        if i in expect:
+            continue
+        email = emails[i]
+        password = passwords[i]
+        do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+    except Exception as er:
+        print(f"Error! {email}")
+        errAcc.append(i)
         continue
-    email = emails[i]
-    password = passwords[i]
-    do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
 
-# for email in lst_email:
+print(errAcc)
+
+for i in range(3):
+    if is_list_empty(errAcc) == True:
+        break
+    for i in range(startNumber, len(emails) - endNumber):
+        try:
+            if i in errAcc:
+                email = emails[i]
+                password = passwords[i]
+                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+                errAcc.remove(i)
+        except Exception as er:
+            print(f"Error! {email}")
+            continue
+
+
+# os.system("shutdown /s /t 0")
 
 # aslammiya12372@outlook.com
 # aslammiya007@outlook.com
