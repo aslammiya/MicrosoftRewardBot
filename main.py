@@ -107,9 +107,10 @@ def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile,name):
     driver_pc.refresh()
     time.sleep(3)
     if checkLogin(driver_pc,name) == True:
-        print("login done")
+        print("Login done")
     else:
-        print("fail")
+        print("Fail")
+        time.sleep(10)
     if pc==True:
         search(driver_pc,numOfSearch,email,"PC")
         print("")
