@@ -1,11 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException,NoSuchElementException
-from essential_generators import DocumentGenerator
+from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 import string
@@ -107,6 +105,35 @@ def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile):
     logout(driver_pc,email)
     driver_pc.quit()
 
+def msnGame(driver):
+    login(driver, email, password)
+    driver.get("https://www.msn.com/en-us/shopping")
+    # wating dalna hai
+    print("wait done")
+    script = """
+    (function() {
+        var msnshoppinggamepane = document.querySelector("shopping-page-base")?.shadowRoot.querySelector("shopping-homepage")?.shadowRoot.querySelector("msft-feed-layout")?.shadowRoot.querySelector("msn-shopping-game-pane");
+        if (msnshoppinggamepane != null) {
+            msnshoppinggamepane.scrollIntoView();
+            msnshoppinggamepane.style.setProperty("grid-area", "slot1");
+            msnshoppinggamepane.setAttribute('gamestate', 'active');
+            msnshoppinggamepane.cardsPerGame = 1;
+            msnshoppinggamepane.resetGame();
+        } else {
+            alert("Unable to locate the shopping game!");
+        }
+    })();
+    """
+    driver.execute_script(script)
+    print("exe done")
+    shadow_host = driver.find_element(By.CSS_SELECTOR, "div.shopping-overlay-buttons button.shopping-select-overlay-button")
+    shadow_root = driver.execute_script('return arguments[0].shadowRoot', shadow_host)
+    time.sleep(5)
+    print("sleeped")
+    button = shadow_root.find_element(By.XPATH, '//div[contains(@class, "shopping-overlay-buttons")]//button[contains(@class, "shopping-select-overlay-button")]')
+    button.click()
+    time.sleep(100000)
+
 def punchCards(driver):
     print("Rewards start")
     driver.get('https://rewards.bing.com/')
@@ -181,17 +208,24 @@ if pc_numOfSearch <= 0:
     pcBool = False
 if mobile_numOfSearch <= 0:
     mobileBool = False
+onlyValue = config.only
 errAcc = []
 
 for i in range(startNumber, len(emails) - endNumber):
     try:
         if i in expect:
             continue
-        email = emails[i]
-        password = passwords[i]
-        do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+        if is_list_empty(onlyValue) == False:
+            if i in onlyValue:
+                email = emails[i]
+                password = passwords[i]
+                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+        else:
+            email = emails[i]
+            password = passwords[i]
+            do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
     except Exception as er:
-        print(f"Error! {email}")
+        print(f"Error! {er}")
         errAcc.append(i)
         continue
 
