@@ -3,7 +3,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 import string
@@ -13,8 +12,6 @@ import os
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 11.0; SM-M30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
 PATH_OF_DRIVER = "C:\\Users\\aslam\\chromedriver_win32\\chromedriver.exe"
-# PROXY_HOST = '165.227.81.188'
-# PROXY_PORT = 9987
 
 def get_driver():
     options = Options()
@@ -24,7 +21,7 @@ def get_driver():
     options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument('--disable-images')
     options.add_argument('--no-sandbox')
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
     return driver
@@ -39,15 +36,12 @@ def login(driver, email, password):
     otpInput = (By.ID, "iOttText")
     otpBtn = (By.ID, "iVerifyCodeAction")
     driver.get('https://login.live.com')
-    # driver.get('https://whatismyipaddress.com/')
-    # time.sleep(20000)
     print(f">> Email {email}")
     WebDriverWait(driver, 15).until(EC.element_to_be_clickable(EMAILFIELD)).send_keys(email)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
     print(f">> Password {password}")
     WebDriverWait(driver, 15).until(EC.element_to_be_clickable(PASSWORDFIELD)).send_keys(password)
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(NEXTBUTTON)).click()
-    # time.sleep(10)
     try:
         print("▣ Clicking button")
         WebDriverWait(driver, 15).until(EC.element_to_be_clickable(NOBUTTON)).click()
@@ -65,8 +59,14 @@ def login(driver, email, password):
         time.sleep(5)
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, 'iNext'))).click()
 
-    driver.get(f'https://www.bing.com/search?q={generate_sentence()}')
+    driver.get(f'https://www.bing.com/')
+    hideLines(3)
     print(f"\nLog In To {email}")
+    # time.sleep(30000)
+
+def hideLines(num_lines):
+    for _ in range(num_lines):
+        print("\033[F\033[K", end='')
 
 def generate_sentence():
     sentence_length = random.randint(3, 10)
@@ -78,6 +78,20 @@ def totalPoints(driver):
     time.sleep(3)
     return WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//span[@id="id_rc"]')))
 
+def checkLogin(driver,name):
+    element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_n")))
+    text = str(element.text)
+    if text == name and text.strip() != "":
+        print("Check ", text)
+        return True
+    else:
+        time.sleep(5)
+        if text == name and text.strip() != "":
+            print("Check ", element.text)
+            return True
+        print("Login failed ", text)
+        return False
+
 def search(driver,numOfSearch,email,mode):
     for i in range(numOfSearch):
         print(f"\r{email} {mode} Search : {i+1}/{numOfSearch}", end="")
@@ -87,13 +101,16 @@ def logout(driver,email):
     driver.get("https://login.live.com/logout.srf")
     print(f"Log Out From {email}")
 
-def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile):
+def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile,name):
     driver_pc = get_driver()
     login(driver_pc, email, password)
     driver_pc.refresh()
-    time.sleep(10)
+    time.sleep(3)
+    if checkLogin(driver_pc,name) == True:
+        print("login done")
+    else:
+        print("fail")
     if pc==True:
-        # print(totalPoints(driver_pc).text)
         search(driver_pc,numOfSearch,email,"PC")
         print("")
     if mobile==True:
@@ -105,94 +122,11 @@ def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile):
     logout(driver_pc,email)
     driver_pc.quit()
 
-def msnGame(driver):
-    login(driver, email, password)
-    driver.get("https://www.msn.com/en-us/shopping")
-    # wating dalna hai
-    print("wait done")
-    script = """
-    (function() {
-        var msnshoppinggamepane = document.querySelector("shopping-page-base")?.shadowRoot.querySelector("shopping-homepage")?.shadowRoot.querySelector("msft-feed-layout")?.shadowRoot.querySelector("msn-shopping-game-pane");
-        if (msnshoppinggamepane != null) {
-            msnshoppinggamepane.scrollIntoView();
-            msnshoppinggamepane.style.setProperty("grid-area", "slot1");
-            msnshoppinggamepane.setAttribute('gamestate', 'active');
-            msnshoppinggamepane.cardsPerGame = 1;
-            msnshoppinggamepane.resetGame();
-        } else {
-            alert("Unable to locate the shopping game!");
-        }
-    })();
-    """
-    driver.execute_script(script)
-    print("exe done")
-    shadow_host = driver.find_element(By.CSS_SELECTOR, "div.shopping-overlay-buttons button.shopping-select-overlay-button")
-    shadow_root = driver.execute_script('return arguments[0].shadowRoot', shadow_host)
-    time.sleep(5)
-    print("sleeped")
-    button = shadow_root.find_element(By.XPATH, '//div[contains(@class, "shopping-overlay-buttons")]//button[contains(@class, "shopping-select-overlay-button")]')
-    button.click()
-    time.sleep(100000)
-
-def punchCards(driver):
-    print("Rewards start")
-    driver.get('https://rewards.bing.com/')
-    time.sleep(10)
-    rewards_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "id_rh")))
-    rewards_button.click()
-    time.sleep(15)
-    # card_list = driver.find_elements(By.XPATH,"//div[@id='bingRewards']/div[1]/div[5]//div[contains(@class, 'card')]")
-    print("ele finded")
-    count = 1
-    while True:
-        try:
-            card_list = driver.find_elements(By.XPATH, f"//div[@id='bingRewards']/div[1]/div[5]/div[{count}]//div[contains(@class, 'card')]")
-            if not card_list:
-                break
-            for card in card_list:
-                card.click()
-                time.sleep(2)
-                rewards_button.click()
-            count += 1
-        except NoSuchElementException:
-            break
-    time.sleep(10)
-    # for card in driver.find_elements(By.XPATH,"//div[@id='bingRewards']/div[1]/div[5]//div[contains(@class, 'card')]"):
-    #     print("for loop")
-    #     driver.execute_script("arguments[0].scrollIntoView();", card)
-    #     card.click()
-    #     time.sleep(2)
-    #     rewards_button.click()
-    return "All cards have been clicked"
-
-def click_all_cards(driver):
-    # set up webdriver
-    wait = WebDriverWait(driver, 10)
-    
-    # navigate to rewards.bing.com
-    driver.get('https://rewards.bing.com/')
-    time.sleep(3)
-    
-    while True:
-        card_list = driver.find_elements(By.XPATH,"//div[@id='bingRewards']/div[1]/div[5]//div[contains(@class, 'card')]")
-        if len(card_list) == 0:
-            break
-        for card in card_list:
-            card.click()
-            time.sleep(2)
-            rewards_button = wait.until(EC.element_to_be_clickable((By.ID, "id_rh")))
-            rewards_button.click()
-            time.sleep(3)
-        driver.get('https://rewards.bing.com/')
-        time.sleep(3)
-    driver.quit()
-
 def is_list_empty(lst):
     if not lst:
         return True
     else:
         return False
-
 
 pc_numOfSearch = config.pc_numOfSearch
 mobile_numOfSearch = config.mobile_numOfSearch
@@ -204,6 +138,7 @@ mobileBool = config.mobile_search
 startNumber = config.startNumber
 endNumber = config.endNumber
 expect = config.expect
+names = config.names
 if pc_numOfSearch <= 0:
     pcBool = False
 if mobile_numOfSearch <= 0:
@@ -219,11 +154,13 @@ for i in range(startNumber, len(emails) - endNumber):
             if i in onlyValue:
                 email = emails[i]
                 password = passwords[i]
-                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+                name = names[i]
+                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
         else:
             email = emails[i]
             password = passwords[i]
-            do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+            name = names[i]
+            do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
         print(f"Error! {er}")
         errAcc.append(i)
@@ -239,14 +176,16 @@ for i in range(3):
             if i in errAcc:
                 email = emails[i]
                 password = passwords[i]
-                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool)
+                name = names[i]
+                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
                 errAcc.remove(i)
         except Exception as er:
             print(f"Error! {email}")
             continue
-
-
-# os.system("shutdown /s /t 0")
+    print(errAcc)
+    
+if config.shutdown == True:
+    os.system("shutdown /s /t 0")
 
 # aslammiya12372@outlook.com
 # aslammiya007@outlook.com
