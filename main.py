@@ -21,7 +21,7 @@ def get_driver():
     options.add_argument('--blink-settings=imagesEnabled=false')
     options.add_argument('--disable-images')
     options.add_argument('--no-sandbox')
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
     return driver
@@ -82,14 +82,14 @@ def checkLogin(driver,name):
     element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_n")))
     text = str(element.text)
     if text == name and text.strip() != "":
-        print("Check ", text)
+        print(text,"Login checked successfull")
         return True
     else:
         time.sleep(5)
         if text == name and text.strip() != "":
-            print("Check ", element.text)
+            print(text,"Login checked successfull")
             return True
-        print("Login failed ", text)
+        print("Login check failed ", name, text)
         return False
 
 def search(driver,numOfSearch,email,mode):
@@ -107,9 +107,8 @@ def do_search(numOfSearch,numOfMobileSearch,email,password,pc,mobile,name):
     driver_pc.refresh()
     time.sleep(3)
     if checkLogin(driver_pc,name) == True:
-        print("Login done")
+        pass
     else:
-        print("Fail")
         time.sleep(10)
     if pc==True:
         search(driver_pc,numOfSearch,email,"PC")
@@ -163,7 +162,7 @@ for i in range(startNumber, len(emails) - endNumber):
             name = names[i]
             do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
-        print(f"Error! {er}")
+        print(f"Error! {email}")
         errAcc.append(i)
         continue
 
