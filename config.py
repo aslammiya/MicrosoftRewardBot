@@ -5,11 +5,11 @@ def listSize(email_lists):
         emailPosition = emailPosition + 1
 
 aslam_emails = ["aslammiya786@outlook.com", "aslammiya12372@outlook.com", "aslammiya007@outlook.com", "aslammiya5257@gmail.com","aslammiya6362@gmail.com","oneacc1189@outlook.com", "fiveacc8282@outlook.com", "nine90962@outlook.com", "sixsiix6606@outlook.com","ten10tten@outlook.com"]
-aslam_emails_names = ["Aslam", "Aslam", "Aslam", "Aslam","Aslam","One", "Five", "Nine", "Six", "Ten10"]
+aslam_emails_names = ["Aslam", "Aslam", "Aslam", "Aslam","Aslam","one", "Five", "Nine", "Six", "Ten10"]
 aslam_passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam"]
 
 sohel_emails = ["sohelmiya108@gmail.com","sohelmiya5559@gmail.com", "sohelmiya0007@gmail.com","sohelmiya1223@gmail.com","sohelmiya763@gmail.com","sohelmiya0123@gmail.com"]
-sohel_emails_name = ["Sohel","Sohel", "Sohel","Sohel","Sohel","Sohel"]
+sohel_emails_name = ["Sohel","Sohel", "Sohel","Sohel","SOHEL","Sohel"]
 sohel_passwords = ["123@sohel","123@sohel", "123@sohel", "123@sohel","123@sohel","123@SOHEL"]
 
 sahil_email = ["sahilmiya0842@outlook.com"]
@@ -32,7 +32,7 @@ expect = []
 only = []
 
 
-listSize(emails)
+# listSize(emails)
 ########## REWARD NUMBERS ##########
 # aslammiya786@outlook.com ---> 9820654116 My Number
 # aslammiya12372@outlook.com ---> 9820654116 My Number
