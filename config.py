@@ -8,9 +8,9 @@ aslam_emails = ["aslammiya786@outlook.com", "aslammiya12372@outlook.com", "aslam
 aslam_emails_names = ["Aslam", "Aslam", "Aslam", "Aslam","Aslam","one", "Five", "Nine", "Six", "Ten10"]
 aslam_passwords = ["123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam", "123@Aslam"]
 
-sohel_emails = ["sohelmiya108@gmail.com","sohelmiya5559@gmail.com", "sohelmiya0007@gmail.com","sohelmiya1223@gmail.com","sohelmiya763@gmail.com","sohelmiya0123@gmail.com"]
-sohel_emails_name = ["Sohel","Sohel", "Sohel","Sohel","SOHEL","Sohel"]
-sohel_passwords = ["123@sohel","123@sohel", "123@sohel", "123@sohel","123@sohel","123@SOHEL"]
+sohel_emails = ["sohelmiya108@gmail.com","sohelmiya5559@gmail.com", "sohelmiya0007@gmail.com","sohelmiya1223@gmail.com","sohelmiya763@gmail.com","sohelmiya0123@gmail.com","sohelmiya767@outlook.com","sohelmiya545@outlook.com","sohelmiya702@outlook.com","sohelmiya638@outlook.com"]
+sohel_emails_name = ["Sohel","Sohel", "Sohel","Sohel","SOHEL","Sohel","Sohel","Sohel","Sohel","Sohel"]
+sohel_passwords = ["123@sohel","123@sohel", "123@sohel", "123@sohel","123@sohel","123@SOHEL","123@sohel","123@sohel","123@sohel","123@sohel"]
 
 sahil_email = ["sahilmiya0842@outlook.com"]
 sahil_email_name = ["Sahil"]
@@ -32,7 +32,7 @@ expect = []
 only = []
 
 
-# listSize(emails)
+listSize(emails)
 ########## REWARD NUMBERS ##########
 # aslammiya786@outlook.com ---> 9820654116 My Number
 # aslammiya12372@outlook.com ---> 9820654116 My Number
