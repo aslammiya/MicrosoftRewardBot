@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import platform
 import time
 import random
 import string
@@ -23,7 +24,10 @@ def get_driver():
     options.add_argument('--no-sandbox')
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
+    if check_os == "Linux":
+        driver = webdriver.Chrome(options=options)
+    else:
+        driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
     return driver
 
 def login(driver, email, password):
@@ -127,6 +131,16 @@ def is_list_empty(lst):
         return True
     else:
         return False
+
+def check_os():
+    system = platform.system()
+    if system == "Windows":
+        return "Windows"
+    elif system == "Linux":
+        return "Linux"
+    else:
+        return "Unknown"
+
 
 pc_numOfSearch = config.pc_numOfSearch
 mobile_numOfSearch = config.mobile_numOfSearch
