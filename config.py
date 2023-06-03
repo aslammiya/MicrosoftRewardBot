@@ -16,9 +16,13 @@ sahil_email = ["sahilmiya0842@outlook.com"]
 sahil_email_name = ["Sahil"]
 sahil_passwords = ["sahil@miya"]
 
-emails = aslam_emails + sohel_emails + sahil_email
-passwords = aslam_passwords + sohel_passwords + sahil_passwords
-names = aslam_emails_names + sohel_emails_name + sahil_email_name
+newBees_emails = ["eleven11eeleven@outlook.com"]
+newBees_email_name = ["123@Aslam"]
+newBees_passwords = ["Ten10"]
+
+emails = aslam_emails + sohel_emails + sahil_email + newBees_emails
+passwords = aslam_passwords + sohel_passwords + sahil_passwords + newBees_passwords
+names = aslam_emails_names + sohel_emails_name + sahil_email_name + newBees_email_name
 
 pc_search = True
 mobile_search = True
@@ -26,13 +30,15 @@ last4Digit = 4116
 pc_numOfSearch = 36
 mobile_numOfSearch = 22
 shutdown = False
+newBees = True
+newBeesStart = 21
 startNumber = 0
 endNumber = 0
 expect = []
 only = []
 
 
-listSize(emails)
+# listSize(emails)
 ########## REWARD NUMBERS ##########
 # aslammiya786@outlook.com ---> 9820654116 My Number
 # aslammiya12372@outlook.com ---> 9820654116 My Number

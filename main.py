@@ -144,9 +144,15 @@ if pc_numOfSearch <= 0:
 if mobile_numOfSearch <= 0:
     mobileBool = False
 onlyValue = config.only
-errAcc = []
+newBees = config.newBees
+newBeesStart = config.newBeesStart
 
+errAcc = []
 for i in range(startNumber, len(emails) - endNumber):
+    if newBees == True:
+        if i == newBeesStart:
+            mobileBool = False
+            pc_numOfSearch = 12
     try:
         if i in expect:
             continue
@@ -160,6 +166,7 @@ for i in range(startNumber, len(emails) - endNumber):
             email = emails[i]
             password = passwords[i]
             name = names[i]
+            # print(f"Email : {email}\nPassw : {password}\nPC NO. {pc_numOfSearch}\nMobile No. {mobile_numOfSearch}\nPC Bool {pcBool}\nMobile Bool {mobileBool}\n")
             do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
         print(f"Error! {email}")
@@ -167,7 +174,6 @@ for i in range(startNumber, len(emails) - endNumber):
         continue
 
 print(errAcc)
-
 for i in range(3):
     if is_list_empty(errAcc) == True:
         break
