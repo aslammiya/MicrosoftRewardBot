@@ -219,7 +219,7 @@ for i in range(startNumber, len(emails) - endNumber):
         continue
 
 if is_list_empty(errAcc) == True:
-    sendAlert(telegramIds, message="All Searches Complete!")
+    sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
 else:
     print(errAcc)
     sendAlert(telegramIds, message="")
