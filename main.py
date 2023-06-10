@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from datetime import datetime
 import platform
 import time
 import random
@@ -142,10 +143,15 @@ def check_os():
     else:
         return "Unknown"
 
+def date():
+    today = datetime.today()
+    date = today.strftime("%d %b %Y")
+    return date
+
 def sendTelegramMessage(id,message):
     bot_token = "6289896747:AAEReBXOFz83XIxkviNAZMIMfuMIOS2XGdw"
     if message == "":
-        message = ""
+        message = f"{date()}\n"
         for i in range(len(emails)):
             if i in errAcc:
                 message += (f"{i} {emails[i]} \n")
@@ -233,13 +239,13 @@ for i in range(3):
             print(f"Error! {email}")
             continue
     if is_list_empty(errAcc) == True:
-        sendAlert(telegramIds, message="All Searches Complete!")
+        sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
     else:
         print(errAcc)
         sendAlert(telegramIds, message="")
     
 if config.shutdown == True:
-    sendAlert(telegramIds, message="System Shutdown")
+    sendAlert(telegramIds, message=f"{date()}  :  System Shutdown")
     os.system("shutdown /s /t 0")
 
 # aslammiya12372@outlook.com
