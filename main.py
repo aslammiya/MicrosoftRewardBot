@@ -9,6 +9,7 @@ import random
 import string
 import config
 import os
+import requests
 
 PC_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24'
 MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; Android 11.0; SM-M30) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.101 Mobile Safari/537.36'
@@ -25,7 +26,7 @@ def get_driver():
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     if check_os() == "Windows":
-        driver = webdriver.Chrome(executable_path=PATH_OF_DRIVER, options=options)
+        driver = webdriver.Chrome(options=options)
     else:
         driver = webdriver.Chrome(options=options)
     return driver
@@ -141,6 +142,26 @@ def check_os():
     else:
         return "Unknown"
 
+def sendTelegramMessage(id,message):
+    bot_token = "6289896747:AAEReBXOFz83XIxkviNAZMIMfuMIOS2XGdw"
+    if message == "":
+        message = ""
+        for i in range(len(emails)):
+            if i in errAcc:
+                message += (f"{i} {emails[i]} \n")
+    try:
+        url = "https://api.telegram.org/bot" + str(bot_token) + "/sendMessage?chat_id=" + str(id)
+        textdta = {"text": message}
+        rsp = requests.request("POST", url, params=textdta)
+        rsp.raise_for_status()
+    except Exception as e:
+        err_msg = str(e) + " : Exception"
+        print(err_msg)
+        pass
+
+def sendAlert(telegramIds,message):
+    _ = [sendTelegramMessage(id,message) for id in telegramIds]
+
 
 pc_numOfSearch = config.pc_numOfSearch
 mobile_numOfSearch = config.mobile_numOfSearch
@@ -160,13 +181,18 @@ if mobile_numOfSearch <= 0:
 onlyValue = config.only
 newBees = config.newBees
 newBeesStart = config.newBeesStart
+aslam_id = "839567554"
+sohel_id = "1953137805"
+sahil_id = "1784409786"
+ids = [aslam_id, sohel_id, sahil_id]
+telegramIds = [aslam_id, sohel_id, sahil_id]
 
 errAcc = []
 for i in range(startNumber, len(emails) - endNumber):
     if newBees == True:
-        if i == newBeesStart:
+        if i >= newBeesStart:
             mobileBool = False
-            pc_numOfSearch = 12
+            pc_numOfSearch = 1 #12
     try:
         if i in expect:
             continue
@@ -180,14 +206,18 @@ for i in range(startNumber, len(emails) - endNumber):
             email = emails[i]
             password = passwords[i]
             name = names[i]
-            # print(f"Email : {email}\nPassw : {password}\nPC NO. {pc_numOfSearch}\nMobile No. {mobile_numOfSearch}\nPC Bool {pcBool}\nMobile Bool {mobileBool}\n")
             do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
         print(f"Error! {email}")
         errAcc.append(i)
         continue
 
-print(errAcc)
+if is_list_empty(errAcc) == True:
+    sendAlert(telegramIds, message="All Searches Complete!")
+else:
+    print(errAcc)
+    sendAlert(telegramIds, message="")
+
 for i in range(3):
     if is_list_empty(errAcc) == True:
         break
@@ -202,9 +232,14 @@ for i in range(3):
         except Exception as er:
             print(f"Error! {email}")
             continue
-    print(errAcc)
+    if is_list_empty(errAcc) == True:
+        sendAlert(telegramIds, message="All Searches Complete!")
+    else:
+        print(errAcc)
+        sendAlert(telegramIds, message="")
     
 if config.shutdown == True:
+    sendAlert(telegramIds, message="System Shutdown")
     os.system("shutdown /s /t 0")
 
 # aslammiya12372@outlook.com
