@@ -194,11 +194,12 @@ ids = [aslam_id, sohel_id, sahil_id]
 telegramIds = [aslam_id, sohel_id, sahil_id]
 
 errAcc = []
+sendAlert(telegramIds, message=f"{date()}  :  Grinding Starts")
 for i in range(startNumber, len(emails) - endNumber):
     if newBees == True:
         if i >= newBeesStart:
             mobileBool = False
-            pc_numOfSearch = 1 #12
+            pc_numOfSearch = 12
     try:
         if i in expect:
             continue
