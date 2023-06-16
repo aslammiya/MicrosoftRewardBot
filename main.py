@@ -242,38 +242,37 @@ for i in range(startNumber, len(emails) - endNumber):
             email = emails[i]
             password = passwords[i]
             name = names[i]
-            print(f"{i} {email} mb : {mobileBool} pc {pcBool} pc : {pc_numOfSearch}")
-            # do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
+            do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
         print(f"Error! {email}")
         errAcc.append(i)
         continue
 
-# if is_list_empty(errAcc) == True:
-#     sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
-# else:
-#     print(errAcc)
-#     sendAlert(telegramIds, message="")
+if is_list_empty(errAcc) == True:
+    sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
+else:
+    print(errAcc)
+    sendAlert(telegramIds, message="")
 
-# for i in range(3):
-#     if is_list_empty(errAcc) == True:
-#         break
-#     for i in range(startNumber, len(emails) - endNumber):
-#         try:
-#             if i in errAcc:
-#                 email = emails[i]
-#                 password = passwords[i]
-#                 name = names[i]
-#                 do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
-#                 errAcc.remove(i)
-#         except Exception as er:
-#             print(f"Error! {email}")
-#             continue
-#     if is_list_empty(errAcc) == True:
-#         sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
-#     else:
-#         print(errAcc)
-#         sendAlert(telegramIds, message="")
+for i in range(3):
+    if is_list_empty(errAcc) == True:
+        break
+    for i in range(startNumber, len(emails) - endNumber):
+        try:
+            if i in errAcc:
+                email = emails[i]
+                password = passwords[i]
+                name = names[i]
+                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
+                errAcc.remove(i)
+        except Exception as er:
+            print(f"Error! {email}")
+            continue
+    if is_list_empty(errAcc) == True:
+        sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
+    else:
+        print(errAcc)
+        sendAlert(telegramIds, message="")
     
 if config.shutdown == True:
     sendAlert(telegramIds, message=f"{date()}  :  System Shutdown")
