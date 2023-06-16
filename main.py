@@ -3,8 +3,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from lxml import html
 from datetime import datetime
 import platform
+import credencials
 import time
 import random
 import string
@@ -168,38 +170,65 @@ def sendTelegramMessage(id,message):
 def sendAlert(telegramIds,message):
     _ = [sendTelegramMessage(id,message) for id in telegramIds]
 
+def extract_emails():
+    response = requests.get("https://strong-sherbet-63e2ba.netlify.app/")
+    tree = html.fromstring(response.content)
+    email_elements = tree.xpath("//td[@name='email']")
+    emails = [element.text.strip() for element in email_elements]
+    return emails
+
+def extract_passswords():
+    response = requests.get("https://strong-sherbet-63e2ba.netlify.app/")
+    tree = html.fromstring(response.content)
+    password_elements = tree.xpath("//td[@name='password']")
+    passwords = [element.text.strip() for element in password_elements]
+    return passwords
+
+def extract_names():
+    response = requests.get("https://strong-sherbet-63e2ba.netlify.app/")
+    tree = html.fromstring(response.content)
+    name_elements = tree.xpath("//td[@name='name']")
+    names = [element.text.strip() for element in name_elements]
+    return names
+
 
 pc_numOfSearch = config.pc_numOfSearch
 mobile_numOfSearch = config.mobile_numOfSearch
 last4Digit = config.last4Digit
-emails = config.emails
-passwords = config.passwords
+if config.credencials == True:
+    emails = credencials.emails
+    passwords = credencials.passwords
+    names = credencials.names
+else:
+    emails = extract_emails()
+    passwords = extract_passswords()
+    names = extract_names()
 pcBool = config.pc_search
 mobileBool = config.mobile_search
 startNumber = config.startNumber
 endNumber = config.endNumber
 expect = config.expect
-names = config.names
 if pc_numOfSearch <= 0:
     pcBool = False
 if mobile_numOfSearch <= 0:
     mobileBool = False
 onlyValue = config.only
 newBees = config.newBees
-newBeesStart = config.newBeesStart
+newBeesNumber = config.newBeesNumber
 aslam_id = "839567554"
 sohel_id = "1953137805"
 sahil_id = "1784409786"
-ids = [aslam_id, sohel_id, sahil_id]
-telegramIds = [aslam_id, sohel_id, sahil_id]
+telegramIds = [aslam_id]
 
 errAcc = []
 sendAlert(telegramIds, message=f"{date()}  :  Grinding Starts")
 for i in range(startNumber, len(emails) - endNumber):
     if newBees == True:
-        if i >= newBeesStart:
+        if i in newBeesNumber:
             mobileBool = False
             pc_numOfSearch = 12
+        else:
+            pc_numOfSearch = config.pc_numOfSearch
     try:
         if i in expect:
             continue
@@ -213,60 +242,39 @@ for i in range(startNumber, len(emails) - endNumber):
             email = emails[i]
             password = passwords[i]
             name = names[i]
-            do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
+            print(f"{i} {email} mb : {mobileBool} pc {pcBool} pc : {pc_numOfSearch}")
+            # do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
         print(f"Error! {email}")
         errAcc.append(i)
         continue
 
-if is_list_empty(errAcc) == True:
-    sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
-else:
-    print(errAcc)
-    sendAlert(telegramIds, message="")
+# if is_list_empty(errAcc) == True:
+#     sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
+# else:
+#     print(errAcc)
+#     sendAlert(telegramIds, message="")
 
-for i in range(3):
-    if is_list_empty(errAcc) == True:
-        break
-    for i in range(startNumber, len(emails) - endNumber):
-        try:
-            if i in errAcc:
-                email = emails[i]
-                password = passwords[i]
-                name = names[i]
-                do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
-                errAcc.remove(i)
-        except Exception as er:
-            print(f"Error! {email}")
-            continue
-    if is_list_empty(errAcc) == True:
-        sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
-    else:
-        print(errAcc)
-        sendAlert(telegramIds, message="")
+# for i in range(3):
+#     if is_list_empty(errAcc) == True:
+#         break
+#     for i in range(startNumber, len(emails) - endNumber):
+#         try:
+#             if i in errAcc:
+#                 email = emails[i]
+#                 password = passwords[i]
+#                 name = names[i]
+#                 do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
+#                 errAcc.remove(i)
+#         except Exception as er:
+#             print(f"Error! {email}")
+#             continue
+#     if is_list_empty(errAcc) == True:
+#         sendAlert(telegramIds, message=f"{date()}  :  All Searches Complete!")
+#     else:
+#         print(errAcc)
+#         sendAlert(telegramIds, message="")
     
 if config.shutdown == True:
     sendAlert(telegramIds, message=f"{date()}  :  System Shutdown")
     os.system("shutdown /s /t 0")
-
-# aslammiya12372@outlook.com
-# aslammiya007@outlook.com
-# sahilmiya0842@outlook.com
-# sahil@miya
-# 123@Aslam
-# oneacc1189@outlook.com
-# twoacc2287@outlook.com
-# threeacc3386@outlook.com
-# fouracc3386@outlook.com
-# sohelmiya0007@gmail.com
-
-
-## help us to protecct your account
-# iProofLbl0 radio button
-# iProofEmail proof  email email enter field
-# iSelectProofAction Send code button
-
-
-######## PRIVICY PAGE ###########
-# BUTTON ID = id="id__0"
-# TITLE = <span role="heading" aria-level="1" class="css-105">Your Microsoft account brings everything together&nbsp;</span>
