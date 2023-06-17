@@ -28,10 +28,7 @@ def get_driver():
     options.add_argument('--no-sandbox')
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    if check_os() == "Windows":
-        driver = webdriver.Chrome(options=options)
-    else:
-        driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=options)
     return driver
 
 def login(driver, email, password):
@@ -170,39 +167,30 @@ def sendTelegramMessage(id,message):
 def sendAlert(telegramIds,message):
     _ = [sendTelegramMessage(id,message) for id in telegramIds]
 
-def extract_emails():
+def getCredencials():
     response = requests.get("https://strong-sherbet-63e2ba.netlify.app/")
     tree = html.fromstring(response.content)
     email_elements = tree.xpath("//td[@name='email']")
-    emails = [element.text.strip() for element in email_elements]
-    return emails
-
-def extract_passswords():
-    response = requests.get("https://strong-sherbet-63e2ba.netlify.app/")
-    tree = html.fromstring(response.content)
     password_elements = tree.xpath("//td[@name='password']")
-    passwords = [element.text.strip() for element in password_elements]
-    return passwords
-
-def extract_names():
-    response = requests.get("https://strong-sherbet-63e2ba.netlify.app/")
-    tree = html.fromstring(response.content)
     name_elements = tree.xpath("//td[@name='name']")
-    names = [element.text.strip() for element in name_elements]
-    return names
+    global emailsElement, passwordsElement, namesElement
+    emailsElement = [element.text.strip() for element in email_elements]
+    passwordsElement = [element.text.strip() for element in password_elements]
+    namesElement = [element.text.strip() for element in name_elements]
+    
 
-
-pc_numOfSearch = config.pc_numOfSearch
-mobile_numOfSearch = config.mobile_numOfSearch
-last4Digit = config.last4Digit
-if config.credencials == True:
+if config.credencials == False:
+    getCredencials()
+    emails = emailsElement
+    passwords = passwordsElement
+    names = namesElement
+else:
     emails = credencials.emails
     passwords = credencials.passwords
     names = credencials.names
-else:
-    emails = extract_emails()
-    passwords = extract_passswords()
-    names = extract_names()
+pc_numOfSearch = config.pc_numOfSearch
+mobile_numOfSearch = config.mobile_numOfSearch
+last4Digit = config.last4Digit
 pcBool = config.pc_search
 mobileBool = config.mobile_search
 startNumber = config.startNumber
@@ -242,6 +230,7 @@ for i in range(startNumber, len(emails) - endNumber):
             email = emails[i]
             password = passwords[i]
             name = names[i]
+            # print(f"{i} {email} {password} {name}")
             do_search(pc_numOfSearch, mobile_numOfSearch, email, password, pc=pcBool, mobile=mobileBool, name=name)
     except Exception as er:
         print(f"Error! {email}")
